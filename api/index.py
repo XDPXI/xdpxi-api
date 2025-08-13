@@ -3,6 +3,7 @@ from flask import Flask
 
 app = Flask(__name__)
 
+
 # =============== UNITED EMPIRES ===============
 
 # Server Stuff
@@ -16,13 +17,16 @@ def server_status():
 
     return 'Server status unresponsive', 500
 
+
 @app.route("/ue/v1/server/start", methods=["POST"])
 def start_server():
     return 'Work in progress', 501
 
+
 @app.route("/ue/v1/server/stop", methods=["POST"])
 def stop_server():
     return 'Work in progress', 501
+
 
 @app.route("/ue/v1/server/restart", methods=["POST"])
 def restart_server():
@@ -33,8 +37,6 @@ def restart_server():
 
 @app.route("/ue/v1/account/userinfo/<path:userid>", methods=["GET"])
 def account_information(userid):
-
-
     return 'Work in progress', 501
 
 

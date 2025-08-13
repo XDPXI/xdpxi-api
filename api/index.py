@@ -1,9 +1,12 @@
-from flask import Flask
 import requests
+from clerk_backend_api import Clerk
+from flask import Flask
 
 app = Flask(__name__)
 
 # =============== UNITED EMPIRES ===============
+
+# Server Stuff
 
 @app.route("/ue/v1/server/status", methods=["GET"])
 def server_status():
@@ -25,6 +28,16 @@ def stop_server():
 @app.route("/ue/v1/server/restart", methods=["POST"])
 def restart_server():
     return 'Work in progress', 501
+
+
+# Account Stuff
+
+@app.route("/ue/v1/account/userinfo/<path:userid>", methods=["GET"])
+def account_information(userid):
+
+
+    return 'Work in progress', 501
+
 
 # =============== XDPXI ===============
 

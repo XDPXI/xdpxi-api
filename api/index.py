@@ -1,5 +1,4 @@
 import requests
-from clerk_backend_api import Clerk
 from flask import Flask
 
 app = Flask(__name__)

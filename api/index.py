@@ -79,9 +79,9 @@ def check_status_v3(raw_url):
 
     if "online" not in data:
         return jsonify({"error": "No status field in response"}), 400
-    if data["online"] is True:
+    if data["online"]:
         return jsonify(data), 200
-    if data["online"] is False:
+    if not data["online"]:
         return jsonify({"online": False}), 503
     return jsonify({"error": "Unknown status code"}), 400
 

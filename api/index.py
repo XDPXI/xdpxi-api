@@ -132,8 +132,6 @@ def account_information(userid):
 
 # =============== XDPXI ===============
 
-# something idk
-
 # =====================================
 
 if __name__ == "__main__":

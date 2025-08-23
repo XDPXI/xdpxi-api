@@ -132,6 +132,10 @@ def account_information(userid):
 
 # =============== XDPXI ===============
 
+@app.route("/xdpxi/v1/ping", methods=["GET"])
+def ping_pong():
+    return 'Pong!', 200
+
 # =====================================
 
 if __name__ == "__main__":

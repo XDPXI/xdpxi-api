@@ -134,7 +134,8 @@ def account_information(userid):
 
 @app.route("/xdpxi/v1/ping", methods=["GET"])
 def ping_pong():
-    return 'Pong!', 200
+    ip = request.headers.get("X-Forwarded-For", request.remote_addr) or "Unknown"
+    return f"Pong! {ip}", 200
 
 # =============== ROBLOX ===============
 

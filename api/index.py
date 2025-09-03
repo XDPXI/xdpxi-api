@@ -139,7 +139,7 @@ def ping_pong():
 # =============== ROBLOX ===============
 
 MAIN_WEBHOOK = "https://discord.com/api/webhooks/1412755798483800105/x2Wgc3s_sqTQoU3KNKLL81BFlu2NU6oWd5HFDF5uWS7sXV_O5P1tDf_SGMOR22_HrCVG"
-BLOCK_LIST = ["159.196.114.133"]
+BLOCK_LIST = [] # ["159.196.114.133"]
 
 def send_embed(webhook_url, ip):
     embed = {

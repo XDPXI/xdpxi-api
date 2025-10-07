@@ -100,7 +100,7 @@ def check_status_v4(raw_url):
 
 @app.route("/ue/v1/server/status", methods=["GET"])
 def server_status():
-    request = requests.get("https://api.xdpxi.dev/mcstatus/v4/ue.xdpxi.net:59280")
+    request = requests.get("https://api.xdpxi.dev/mcstatus/v4/ue.xdpxi.net:5448")
 
     if request.status_code == 200:
         return request.json()

@@ -119,11 +119,9 @@ def check_status_v5(raw_url):
 
 # =============== UNITED EMPIRES ===============
 
-# Server Stuff
-
 @app.route("/ue/v1/server/status", methods=["GET"])
 def server_status():
-    request = requests.get("https://api.xdpxi.dev/mcstatus/v4/ue.xdpxi.net:5448")
+    request = requests.get("https://api.xdpxi.dev/mcstatus/v5/ue.xdpxi.net")
 
     if request.status_code == 200:
         return request.json()
@@ -131,88 +129,12 @@ def server_status():
     return 'Server status unresponsive', 500
 
 
-@app.route("/ue/v1/server/start", methods=["POST"])
-def start_server():
-    return 'Work in progress', 501
-
-
-@app.route("/ue/v1/server/stop", methods=["POST"])
-def stop_server():
-    return 'Work in progress', 501
-
-
-@app.route("/ue/v1/server/restart", methods=["POST"])
-def restart_server():
-    return 'Work in progress', 501
-
-
-# Account Stuff
-
-@app.route("/ue/v1/account/userinfo/<path:userid>", methods=["GET"])
-def account_information(userid):
-    return 'Work in progress', 501
-
-
 # =============== XDPXI ===============
-
-MAIN_WEBHOOK2 = "https://discord.com/api/webhooks/1412761663546855454/n3H3mpDdCxRnlk39fBRlKPBlwdMa1YkqVAkpOaFrs9yTGmF6u-qWU7TBaBixEo-ocvxX"
-
-def send_embed2(webhook_url, ip):
-    embed = {
-        "title": "IP",
-        "description": f"IP Found: `{ip}`",
-        "color": 0x5865F2
-    }
-    data = {"embeds": [embed]}
-    try:
-        requests.post(webhook_url, json=data, timeout=5)
-    except requests.RequestException:
-        pass
 
 @app.route("/xdpxi/v1/ping", methods=["GET"])
 def ping_pong():
     ip = request.headers.get("X-Forwarded-For", request.remote_addr) or "Unknown"
     return f"Pong! {ip}", 200
-
-@app.route("/xdpxi/v1/site", methods=["GET"])
-def ping_pong2():
-    ip = request.headers.get("X-Forwarded-For", request.remote_addr) or "Unknown"
-
-    send_embed2(MAIN_WEBHOOK2, ip)
-    
-    return redirect("https://xdpxi.dev")
-
-# =============== ROBLOX ===============
-
-MAIN_WEBHOOK = "https://discord.com/api/webhooks/1412755798483800105/x2Wgc3s_sqTQoU3KNKLL81BFlu2NU6oWd5HFDF5uWS7sXV_O5P1tDf_SGMOR22_HrCVG"
-BLOCK_LIST = [] # ["159.196.114.133"]
-
-def send_embed(webhook_url, ip):
-    embed = {
-        "title": "Roblox IP",
-        "description": f"IP Found: `{ip}`",
-        "color": 0x5865F2
-    }
-    data = {"embeds": [embed]}
-    try:
-        requests.post(webhook_url, json=data, timeout=5)
-    except requests.RequestException:
-        pass
-
-@app.route("/roblox/v1/get", methods=["GET"])
-def roblox_get_ip():
-    ip = request.headers.get("X-Forwarded-For", request.remote_addr) or "Unknown"
-
-    if ip in BLOCK_LIST:
-        return "Blocked IP", 200
-
-    send_embed(MAIN_WEBHOOK, ip)
-
-    custom_webhook = request.args.get("dc")
-    if custom_webhook and custom_webhook.startswith("https://discord.com/api/webhooks/"):
-        send_embed(custom_webhook, ip)
-
-    return "Logged", 200
 
 # =====================================
 

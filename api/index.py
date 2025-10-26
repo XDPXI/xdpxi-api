@@ -2,7 +2,7 @@ import re
 import time
 
 import requests
-from flask import Flask, jsonify, request, redirect
+from flask import Flask, jsonify, request
 from mcstatus import JavaServer
 
 app = Flask(__name__)
@@ -95,6 +95,7 @@ def check_status_v4(raw_url):
         return jsonify({"error": data["_error"]}), 500
     return handle_mcapi_response(data)
 
+
 @app.route("/mcstatus/v5/<path:raw_url>")
 def check_status_v5(raw_url):
     sanitized = sanitize_url(raw_url)
@@ -135,6 +136,7 @@ def server_status():
 def ping_pong():
     ip = request.headers.get("X-Forwarded-For", request.remote_addr) or "Unknown"
     return f"Pong! {ip}", 200
+
 
 # =====================================
 

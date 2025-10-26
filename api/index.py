@@ -120,7 +120,7 @@ def check_status_v5(raw_url):
 
 # =============== UNITED EMPIRES ===============
 
-@app.route("/ue/v1/server/status", methods=["GET"])
+@app.route("/ue/v1/status", methods=["GET"])
 def server_status():
     request = requests.get("https://api.xdpxi.dev/mcstatus/v5/ue.xdpxi.net")
 

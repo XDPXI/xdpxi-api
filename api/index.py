@@ -1,3 +1,5 @@
+import json
+import os
 import re
 import time
 
@@ -120,6 +122,37 @@ def check_status_v5(raw_url):
 
 # =============== UNITED EMPIRES ===============
 
+JSON_FILE = "ue-agree.json"
+_last_request_time = {}
+USER_ID_REGEX = r"^user_[A-Za-z0-9]{24,}$"
+
+
+def is_valid_user_id(user_id: str) -> bool:
+    return re.match(USER_ID_REGEX, user_id) is not None
+
+
+def can_request(user_id: str) -> bool:
+    now = time.time()
+    last = _last_request_time.get(user_id, 0)
+    if now - last < 5:  # 5-second limit
+        return False
+    _last_request_time[user_id] = now
+    return True
+
+
+def load_agreements():
+    if not os.path.exists(JSON_FILE):
+        with open(JSON_FILE, "w") as f:
+            json.dump({}, f)
+    with open(JSON_FILE, "r") as f:
+        return json.load(f)
+
+
+def save_agreements(data):
+    with open(JSON_FILE, "w") as f:
+        json.dump(data, f, indent=4)
+
+
 @app.route("/ue/v1/status", methods=["GET"])
 def server_status():
     request = requests.get("https://api.xdpxi.dev/mcstatus/v5/ue.xdpxi.net")
@@ -128,6 +161,49 @@ def server_status():
         return request.json()
 
     return 'Server status unresponsive', 500
+
+
+@app.route("/ue/v1/agree/<clerk_user_id>", methods=["GET"])
+def agree(clerk_user_id):
+    if not is_valid_user_id(clerk_user_id):
+        return jsonify({"status": "error", "message": "Invalid Clerk user ID"}), 400
+
+    if not can_request(clerk_user_id):
+        return jsonify({"status": "error", "message": "Too many requests"}), 429
+
+    if os.environ.get("VERCEL") == "1":
+        try:
+            response = requests.get(f"http://api.xdpxi.net:40176/ue/v1/agree/{clerk_user_id}")
+            response.raise_for_status()
+            return jsonify(response.json()), response.status_code
+        except requests.exceptions.RequestException as e:
+            return jsonify({"status": "error", "message": str(e)}), 500
+    else:
+        agreements = load_agreements()
+        agreements[clerk_user_id] = True
+        save_agreements(agreements)
+        return jsonify({"status": "success", "user_id": clerk_user_id, "message": "Agreement recorded"}), 200
+
+
+@app.route("/ue/v1/check/<clerk_user_id>", methods=["GET"])
+def check_agreement(clerk_user_id):
+    if not is_valid_user_id(clerk_user_id):
+        return jsonify({"status": "error", "message": "Invalid Clerk user ID"}), 400
+
+    if not can_request(clerk_user_id):
+        return jsonify({"status": "error", "message": "Too many requests"}), 429
+
+    if os.environ.get("VERCEL") == "1":
+        try:
+            response = requests.get(f"http://api.xdpxi.net:40176/ue/v1/check/{clerk_user_id}")
+            response.raise_for_status()
+            return jsonify(response.json()), response.status_code
+        except requests.exceptions.RequestException as e:
+            return jsonify({"status": "error", "message": str(e)}), 500
+    else:
+        agreements = load_agreements()
+        agreed = agreements.get(clerk_user_id, False)
+        return jsonify({"user_id": clerk_user_id, "agreed": agreed}), 200
 
 
 # =============== XDPXI ===============
